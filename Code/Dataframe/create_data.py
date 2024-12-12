@@ -201,7 +201,7 @@ if __name__ == '__main__':
 # ------------------Dossier pour télécharger les videos  
     orig_v_folder = "Orig_videos"
     C_v_folder = "C_videos"
-    csv_file  = "Data.csv" 
+    csv_file  = "data.csv" 
     file_links = "Youtube_Links.txt"
 
     if not os.path.exists(orig_v_folder):
