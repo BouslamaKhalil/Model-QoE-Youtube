@@ -188,6 +188,18 @@ def write_on_csv_file(csv_file , field):
 if __name__ == '__main__' :
      
     print ("test :) ")
+    
+    
+    """
+ # --------------Définition des formats
+    format_144 = 'bestvideo[height<=144][ext=mp4]+bestaudio[ext=m4a]/best[height<=144][ext=mp4]'
+    format_240 = 'bestvideo[height<=240][ext=mp4]+bestaudio[ext=m4a]/best[height<=240][ext=mp4]'
+    format_360 = 'bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]'
+    format_480 = 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]'
+    format_720 = 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]'
+    format_1080 = 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]'
+
+    """ 
 
 
     #folder= "test_2"

@@ -102,21 +102,6 @@ def compresse_v(input_f,output_f):
     except subprocess.CalledProcessError as e:
         print(f"Erreur lors de la compression : {e}")
 
-"""
-def size_v(orig_v,compressed_v):
-        # Vérifie si les fichiers existent
-    if not os.path.exists(orig_v):
-        print(f"Le dossier original {orig_v} n'existe pas.")
-        return
-    if not os.path.exists(compressed_v):
-        print(f"Le dossier compressé {compressed_v} n'existe pas.")
-        return
-
-    original_size = os.path.getsize(orig_v)
-    compressed_size = os.path.getsize(compressed_v)
-    print("size ori :",original_size , "size compressed : ", compressed_size )
-    return original_size , compressed_size
-"""
 #---------recuperer la taille d'un video ----
 def recup_size(folder , nom_v):
     if not os.path.exists(folder):
@@ -183,22 +168,8 @@ def collector(link, field ,id , orig_v_folder , c_v_folder ):
 
 
 if __name__ == '__main__':
-    #netoyage 
-    #Discription 
-    #ajouter url dans data.csv 
 
-    """
- # --------------Définition des formats
-    format_144 = 'bestvideo[height<=144][ext=mp4]+bestaudio[ext=m4a]/best[height<=144][ext=mp4]'
-    format_240 = 'bestvideo[height<=240][ext=mp4]+bestaudio[ext=m4a]/best[height<=240][ext=mp4]'
-    format_360 = 'bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]'
-    format_480 = 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]'
-    format_720 = 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]'
-    format_1080 = 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]'
-
-    """    
-
-# ------------------Dossier pour télécharger les videos  
+    # ------------------Dossier pour télécharger les videos  
     orig_v_folder = "Orig_videos"
     C_v_folder = "C_videos"
     csv_file  = "data.csv" 
@@ -207,10 +178,9 @@ if __name__ == '__main__':
     if not os.path.exists(orig_v_folder):
         os.makefile(orig_v_folder)
 
-    # modififeir la fonction lastid (61081_360.mp4 au lieu de 7_360.mp4)
+    
     id = last_id_v(orig_v_folder) + 1
-    #print (id)
-
+    
 
 
     # importer les links depuis la list !!!!!!!!!!!!!!!!!!!!!
@@ -223,32 +193,7 @@ if __name__ == '__main__':
         output_f = C_v_folder+"/"+"C_"+str(id)+"_"+reso+".mp4"
         compresse_v(input_f,output_f)
 
-    """
-    download_v(link, orig_v_folder , id , format_240,"240")
-    input_f = orig_v_folder+"/"+str(id)+"_"+"240"+".mp4"
-    output_f = C_v_folder+"/"+"C_"+str(id)+"_"+"240"+".mp4"
-    compresse_v(input_f,output_f)
 
-    download_v(link, orig_v_folder , id , format_360,"360")
-    input_f = orig_v_folder+"/"+str(id)+"_"+"360"+".mp4"
-    output_f = C_v_folder+"/"+"C_"+str(id)+"_"+"360"+".mp4"
-    compresse_v(input_f,output_f)
-
-    download_v(link, orig_v_folder , id , format_480,"480")
-    input_f = orig_v_folder+"/"+str(id)+"_"+"480"+".mp4"
-    output_f = C_v_folder+"/"+"C_"+str(id)+"_"+"480"+".mp4"
-    compresse_v(input_f,output_f)
-    download_v(link, orig_v_folder , id , format_720,"720")
-    input_f = orig_v_folder+"/"+str(id)+"_"+"720"+".mp4"
-    output_f = C_v_folder+"/"+"C_"+str(id)+"_"+"720"+".mp4"
-    compresse_v(input_f,output_f)
-
-    download_v(link, orig_v_folder , id , format_1080,"1080")
-    input_f = orig_v_folder+"/"+str(id)+"_"+"1080"+".mp4"
-    output_f = C_v_folder+"/"+"C_"+str(id)+"_"+"1080"+".mp4"
-    compresse_v(input_f,output_f)
-    """
-    
     field = ["id_v", "id" ,"title", "duration" ,"view_count","categories","subtitles","comment_count", "uploader" , "upload_date", "format" , "height", "resolution" , "creator" , "quality","144","C_144","R_144","240","C_240","R_240","360","C_360","R_360","480","C_480","R_480","720","C_720","R_729","1080","C_1080","R_1080","description"]
     
     #if os.path.isfile(csv_file): 
@@ -265,57 +210,3 @@ if __name__ == '__main__':
 
 
 
-
-
-
-
-
-
-#----------------les parametres 
-
-    #info_dic = get_video_metadata(link)
-    #print ("les para dispo : -------------- ")
-    #all_para(info_dic)
-
-    #enregistrer dans une liste !!!!!!!!!!!!
-    #print ("video database : --------------")
-    #pertinent_para(info_dic)
-
-    """
-#------------ compresser video
-
-    # il faut compersser pour tt les resolutions !!!!!!!!!!!
-    video = ""
-    resol ="360"
-    video = str(id)+"_"+resol+".mp4"
-    folder_c = "test_2"
-    input_f = folder+"/"+video
-    output_f = C_v_folder+"/"+"C_"+video
-    print ("-----compresser-----" )
-    compresse_v(input_f,output_f)
-    print ("--------size------")
-
-    # la moyenne des rations de tous les resolutions possible (moyen ration d'un m video avec tt les reso)
-    x,y = size_v(input_f,output_f)
-    print ("------ration : ------")
-    print ((x-y)/x)
-
-   
-    
-
-#----------------- csv file ------------------
-    field = ["id_v", "id" ,"title","description", "duration" ,"view_count","categories","subtitles","comment_count", "uploader" , "upload_date", "format" , "height", "resolution" , "creator" , "quality","144","C_144","240","C_240","360","C_360","480","C_480","720","C_720","1080","C_1080"]
-    
-    
-    #create_csv_file(csv_file , field)
-
-
-    list_input = collector(link, field, id  , orig_v_folder , C_v_folder)
-    write_on_csv_file(csv_file, list_input)
-    for i in range(len(list_input) )  :
-        print ("key : " , field[i] ,"   value : ", list_input[i])
-
-
-    """
-
-    
