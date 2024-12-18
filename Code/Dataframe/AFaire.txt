@@ -1,0 +1,16 @@
+ 16/12
+ - Il faut corriger la discription (sans espace max 1000 cara )
+ -  il faut gerer la delete des videos 
+ - append lsit data.csv 
+
+ ----------------------------------------
+ 17/12
+ -  il faut gerer la delete des videos # c'est fait 
+ - append lsit data.csv # c'est fait 
+
+ le rest : 
+ - gerer la discription 
+ - scraper les commentaires
+ - gerer les les liens automatiquement 
+# il faut fait ça au plustard 18/12 
+ - Commancer le model (sklearn - keras)

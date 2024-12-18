@@ -1,5 +1,5 @@
-from pytube import YouTube 
-from pytube.exceptions import RegexMatchError
+#from pytube import YouTube 
+#from pytube.exceptions import RegexMatchError
 import yt_dlp
 import os
 import subprocess
@@ -185,11 +185,31 @@ def write_on_csv_file(csv_file , field):
         writer.writerow(field)
 
 
+
+def recup_link(file_links , id ) :
+    try:
+        with open(file_links, 'r', encoding='utf-8') as file:
+            for current_line_number, line in enumerate(file, start=1):
+                if current_line_number == id:
+                    return line.strip()  # Supprime les espaces ou retours à la ligne
+            
+        return f"La ligne {id} n'existe pas dans le fichier."
+    except FileNotFoundError:
+        return f"Le fichier '{file_links}' est introuvable."
+    except Exception as e:
+        return f"Une erreur s'est produite : {e}"
+
 if __name__ == '__main__' :
      
     print ("test :) ")
     
-    
+    file = "data_test.csv"
+    file_links = "Youtube_Links.txt"
+    orig_v_folder = "test_2"
+    C_v_folder = "test_v_compres"
+    field = ["id_v", "id" ,"title", "duration" ,"view_count","categories","subtitles","comment_count", "uploader" , "upload_date", "format" , "height", "resolution" , "creator" , "quality","144","C_144","R_144","240","C_240","R_240","360","C_360","R_360","480","C_480","R_480","720","C_720","R_729","1080","C_1080","R_1080"] # "description"
+    list_resolu = ["144","240","360","480","720","1080"]
+    id = 1
     """
  # --------------Définition des formats
     format_144 = 'bestvideo[height<=144][ext=mp4]+bestaudio[ext=m4a]/best[height<=144][ext=mp4]'
@@ -200,6 +220,57 @@ if __name__ == '__main__' :
     format_1080 = 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]'
 
     """ 
+    """
+    def last_id(file):
+        try:
+            with open(file, 'r', encoding='utf-8') as f:
+                reader = csv.reader(f)
+                rows = list(reader)  # Lire toutes les lignes dans une liste
+                
+                if len(rows) <= 1:  # Si le fichier est vide ou ne contient que l'en-tête
+                    return 0
+                
+                # Récupérer le dernier ID de la première colonne (ignorer l'en-tête)
+                last_row = rows[-1]
+                return int(last_row[0]) if last_row[0].isdigit() else 0
+        except Exception as e:
+            return f"Une erreur : {e}"
+        
+    def last_link(file):
+        try:
+            with open(file, 'r', encoding='utf-8') as f:
+                reader = csv.reader(f)
+                rows = list(reader)  # Lire toutes les lignes dans une liste
+                return len(rows)
+        except Exception as e:
+            return f"Une erreur : {e}"
+    
+    
+    id = last_id(file )
+    
+    print ("id = ",  id)
+
+    id = id + 1 
+
+    link = recup_link(file_links , id)
+
+    print ("link = ", link)
+
+    last_link_num = last_link(file_links)
+
+    print("length list you : " , last_link_num)
+    """
+
+   
+
+    for reso in list_resolu : 
+        v_ori = orig_v_folder+"/"+str(id)+"_"+reso+".mp4"
+        v_com = C_v_folder+"/"+"C_"+str(id)+"_"+reso+".mp4"
+        if (os.path.isfile(v_ori) )and ( os.path.isfile(v_com)) :
+            os.remove(v_ori)
+            os.remove(v_com)
+        else: 
+            print("Error : file not found ")
 
 
     #folder= "test_2"
@@ -209,11 +280,11 @@ if __name__ == '__main__' :
     #print ("-----compresser-----" )
     #compresse_v("orig_videos/1.mp4","test_2/com_1.mp4","1.mp4")
     #size_v("orig_videos/1.mp4","test_2/com_1.mp4")
-    field = ["id", "title","categories","view_count", "duration" , "uploader" , "upload_date", "creator" , "format", "resolution" , "height" , "quality","description","comment_count","144","C_144","240","C240","360","C_360","480","C_480","720","C_720","1080","C_1080","subtitles"]
-    csv_file = "data_test.csv"
+    #field = ["id", "title","categories","view_count", "duration" , "uploader" , "upload_date", "creator" , "format", "resolution" , "height" , "quality","description","comment_count","144","C_144","240","C240","360","C_360","480","C_480","720","C_720","1080","C_1080","subtitles"]
+    #csv_file = "data_test.csv"
     #if : 
     #   create_csv_file(csv_file , field)
-    create_csv_file(csv_file , field)
+    #create_csv_file(csv_file , field)
     #write_on_csv_file(csv_file,["1","tt","animal","rff"] )
 
     

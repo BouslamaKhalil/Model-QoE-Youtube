@@ -55,6 +55,30 @@ def last_id_v(folder):
             pass
     return max(ids, default=0)
 
+def last_id(file):
+    try:
+        with open(file, 'r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            rows = list(reader)  # Lire toutes les lignes dans une liste
+            
+            if len(rows) <= 1:  # Si le fichier est vide ou ne contient que l'en-tête
+                return 0
+            
+            # Récupérer le dernier ID de la première colonne (ignorer l'en-tête)
+            last_row = rows[-1]
+            return int(last_row[0]) if last_row[0].isdigit() else 0
+    except Exception as e:
+        return f"Une erreur : {e}"
+
+def last_link_num(file):
+    try:
+        with open(file, 'r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            rows = list(reader)  # Lire toutes les lignes dans une liste
+            return len(rows)
+    except Exception as e:
+        return f"Une erreur : {e}"
+    
 #-----------------Get Data -----------------
 def get_video_metadata(link):
 
@@ -114,12 +138,13 @@ def recup_size(folder , nom_v):
 #----------------- csv file ------------------
 
 def create_csv_file(csv_file , field):
-    with open(csv_file, 'w', newline='') as file :
-        writer = csv.writer(file)
-        writer.writerow(field)
+    if not os.path.isfile(csv_file):
+        with open(csv_file, 'w', newline='') as file :
+            writer = csv.writer(file)
+            writer.writerow(field)
         
 def write_on_csv_file(csv_file , field):
-    with open(csv_file, 'a', newline='') as file :
+    with open(csv_file,'a', newline='') as file :
         writer = csv.writer(file)
         writer.writerow(field)
 
@@ -158,55 +183,73 @@ def collector(link, field ,id , orig_v_folder , c_v_folder ):
             l_output[i + 2] = str((size_ori - size_c) / size_ori)
         else:
             l_output[i + 2] = "NB"
-    
- 
     return l_output
-    
-
-
-
 
 
 if __name__ == '__main__':
 
-    # ------------------Dossier pour télécharger les videos  
+    
     orig_v_folder = "Orig_videos"
     C_v_folder = "C_videos"
-    csv_file  = "data.csv" 
+    csv_file  = "Data.csv" 
     file_links = "Youtube_Links.txt"
+    field = ["id_v", "id" ,"title", "duration" ,"view_count","categories","subtitles","comment_count", "uploader" , "upload_date", "format" , "height", "resolution" , "creator" , "quality","144","C_144","R_144","240","C_240","R_240","360","C_360","R_360","480","C_480","R_480","720","C_720","R_729","1080","C_1080","R_1080"] # "description"
+    list_resolu = ["144","240","360","480","720","1080"]
 
     if not os.path.exists(orig_v_folder):
         os.makefile(orig_v_folder)
 
+    #id = last_id_v(orig_v_folder) + 1
     
-    id = last_id_v(orig_v_folder) + 1
+    if os.path.exists(csv_file):
+        id = last_id(csv_file) + 1
+    else : 
+        id = 1
     
+    if os.path.exists(file_links) :
+        last_link_number = last_link_num(file_links)
+    else : 
+        last_link_number = 0
 
-
-    # importer les links depuis la list !!!!!!!!!!!!!!!!!!!!!
-    link = recup_link(file_links , id)
-
-    list_resolu = ["144","240","360","480","720","1080"]
-    for reso  in list_resolu : 
-        download_v(link, orig_v_folder , id , reso)
-        input_f = orig_v_folder+"/"+str(id)+"_"+reso+".mp4"
-        output_f = C_v_folder+"/"+"C_"+str(id)+"_"+reso+".mp4"
-        compresse_v(input_f,output_f)
-
-
-    field = ["id_v", "id" ,"title", "duration" ,"view_count","categories","subtitles","comment_count", "uploader" , "upload_date", "format" , "height", "resolution" , "creator" , "quality","144","C_144","R_144","240","C_240","R_240","360","C_360","R_360","480","C_480","R_480","720","C_720","R_729","1080","C_1080","R_1080","description"]
+    if not os.path.isfile(csv_file): 
+            create_csv_file(csv_file , field)
     
-    #if os.path.isfile(csv_file): 
-        #create_csv_file(csv_file , field)
+    while (id <= last_link_number) :
 
 
-    list_input = collector(link, field, id  , orig_v_folder , C_v_folder)
-    time.sleep(1)  
+        # importer les links depuis la list !!!!!!!!!!!!!!!!!!!!!
+        link = recup_link(file_links , id)
+        
+        
+        for reso  in list_resolu : 
+            download_v(link, orig_v_folder , id , reso)
+            input_f = orig_v_folder+"/"+str(id)+"_"+reso+".mp4"
+            output_f = C_v_folder+"/"+"C_"+str(id)+"_"+reso+".mp4"
+            compresse_v(input_f,output_f)
 
-    write_on_csv_file(csv_file, list_input)
-    print ("termineeeeeeeeee")
-    #for i in range(len(list_input) )  :
-    #    print ("key : " , field[i] ,"   value : ", list_input[i])
+
+        list_input = collector(link, field, id  , orig_v_folder , C_v_folder)
+        time.sleep(1)  
+
+        write_on_csv_file(csv_file, list_input)
+
+
+        print ("termineeeeeeeeee")
+        
+        for reso in list_resolu : 
+            v_ori = orig_v_folder+"/"+str(id)+"_"+reso+".mp4"
+            v_com = C_v_folder+"/"+"C_"+str(id)+"_"+reso+".mp4"
+            if (os.path.isfile(v_ori) )and ( os.path.isfile(v_com)) :
+                os.remove(v_ori)
+                os.remove(v_com)
+            else: 
+                print("Error : file not found ")
+        
+        print (id)
+        id = id + 1
+         
+
+
 
 
 
